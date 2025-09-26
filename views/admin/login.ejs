@@ -1,0 +1,21 @@
+<% layout('layout', { title: t('pageTitles.adminLogin') }) %>
+<section class="mx-auto flex max-w-md flex-col gap-6">
+  <header class="space-y-2 text-center">
+    <h1 class="text-3xl font-semibold text-white"><%= t('adminLogin.heading') %></h1>
+    <p class="text-sm text-slate-400"><%= t('adminLogin.description') %></p>
+  </header>
+
+  <form method="POST" action="/admin/login" class="rounded-3xl border border-white/5 bg-slate-950/40 p-8 shadow-inner shadow-slate-950/40">
+    <div class="space-y-6">
+      <div class="space-y-2">
+        <label for="username" class="text-sm font-medium text-slate-200"><%= t('adminLogin.username') %></label>
+        <input id="username" name="username" required placeholder="<%= t('adminLogin.username') %>" class="block w-full rounded-2xl border border-slate-700/60 bg-slate-900/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/50" />
+      </div>
+      <div class="space-y-2">
+        <label for="password" class="text-sm font-medium text-slate-200"><%= t('adminLogin.password') %></label>
+        <input id="password" type="password" name="password" required placeholder="******" class="block w-full rounded-2xl border border-slate-700/60 bg-slate-900/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/50" />
+      </div>
+    </div>
+    <button type="submit" class="mt-8 inline-flex w-full justify-center rounded-full bg-sky-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/20 transition hover:bg-sky-400"><%= t('adminLogin.submit') %></button>
+  </form>
+</section>

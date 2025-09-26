@@ -1,0 +1,25 @@
+{
+  "name": "apt-visit-slots",
+  "version": "1.0.0",
+  "description": "Simple Node.js + SQLite booking tool for apartment visit time slots",
+  "main": "server.js",
+  "scripts": {
+    "init-data": "node scripts/init.js",
+    "start": "node scripts/init.js && node server.js",
+    "dev": "node scripts/init.js && nodemon server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.17.3",
+    "helmet": "^7.1.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

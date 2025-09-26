@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="<%= locale %>">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= title %></title>
+  <script nonce="<%= cspNonce %>">
+    window.tailwind = window.tailwind || {};
+    window.tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Ubuntu', 'Cantarell', 'Noto Sans', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <script nonce="<%= cspNonce %>" src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased">
+  <div class="mx-auto max-w-6xl px-6 py-10 lg:px-10">
+    <% const flagIcons = {
+      nl: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#21468B" /><rect width="24" height="10.666" fill="#FFF" /><rect width="24" height="5.333" fill="#AE1C28" /></svg>',
+      en: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 16" aria-hidden="true"><rect width="24" height="16" fill="#012169" /><path d="M0 0l24 16m0-16L0 16" stroke="#FFF" stroke-width="3" /><path d="M0 0l24 16m0-16L0 16" stroke="#C8102E" stroke-width="1.2" /><path d="M12 0v16M0 8h24" stroke="#FFF" stroke-width="5" /><path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3" /></svg>'
+    }; %>
+
+    <header class="rounded-3xl border border-white/5 bg-slate-900/70 p-6 shadow-xl shadow-slate-950/40 backdrop-blur">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <a href="/" class="inline-flex items-center gap-3 text-lg font-semibold text-white">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-base font-semibold text-sky-300">VB</span>
+            <span><%= t('brand.name') %></span>
+          </a>
+          <p class="mt-2 max-w-xl text-sm text-slate-300"><%= t('brand.tagline') %></p>
+        </div>
+        <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
+          <nav class="flex items-center gap-3 text-sm font-medium text-slate-300">
+            <% if (user) { %>
+              <a class="rounded-full border border-slate-700/70 px-4 py-2 text-slate-200 transition hover:border-slate-500/70 hover:text-white" href="/admin"><%= t('nav.admin') %></a>
+              <a class="inline-flex items-center gap-2 rounded-full bg-rose-500/20 px-4 py-2 text-rose-200 transition hover:bg-rose-500/30" href="/admin/logout"><%= t('nav.logout') %></a>
+            <% } else { %>
+              <a class="inline-flex items-center gap-2 rounded-full bg-slate-800 px-4 py-2 text-slate-100 transition hover:bg-slate-700" href="/admin/login"><%= t('nav.login') %></a>
+            <% } %>
+          </nav>
+          <div class="flex items-center gap-2" aria-label="<%= t('lang.label') %>">
+            <% availableLocales.forEach(code => { const isActive = locale === code; %>
+              <a href="/lang/<%= code %>" aria-label="<%= t('lang.' + code) %>" class="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase transition <%= isActive ? 'border-sky-500/70 bg-sky-500/15 text-sky-200' : 'border-slate-700/70 bg-slate-900/60 text-slate-300 hover:border-slate-500/70 hover:text-white' %>">
+                <span class="inline-flex h-4 w-6 overflow-hidden rounded-sm shadow-sm"><%- flagIcons[code] %></span>
+                <span><%= code %></span>
+              </a>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <% if (flash) { %>
+      <div class="mt-6 rounded-2xl border px-4 py-3 text-sm font-medium shadow-sm shadow-black/10 <%= flash.type==='error' ? 'border-rose-500/40 bg-rose-500/10 text-rose-100' : 'border-emerald-500/40 bg-emerald-500/10 text-emerald-100' %>">
+        <%= flash.msg %>
+      </div>
+    <% } %>
+
+    <main class="mt-6 rounded-3xl border border-white/5 bg-slate-900/80 p-6 shadow-2xl shadow-slate-950/40 backdrop-blur">
+      <%- body %>
+    </main>
+
+    <footer class="mt-8 flex flex-col gap-2 border-t border-white/5 pt-4 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+      <span>© <span id="year"><%= new Date().getFullYear() %></span> <%= t('brand.name') %></span>
+      <span><%= t('footer.made') %></span>
+    </footer>
+  </div>
+</body>
+</html>

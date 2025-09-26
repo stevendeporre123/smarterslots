@@ -1,0 +1,79 @@
+<% layout('layout', { title: t('pageTitles.bookVisit') }) %>
+<% const availableSlots = slots.filter(s => !s.booked_by_name); %>
+<section class="space-y-10">
+  <div class="space-y-4">
+    <h1 class="text-3xl font-semibold text-white sm:text-4xl"><%= t('index.heading') %></h1>
+    <p class="max-w-2xl text-base text-slate-300 whitespace-pre-line sm:text-lg"><%= introText %></p>
+  </div>
+
+  <form method="POST" action="/book" class="rounded-3xl border border-white/5 bg-slate-950/40 p-6 shadow-inner shadow-slate-950/40">
+    <div class="grid gap-6 sm:grid-cols-2">
+      <div class="space-y-2">
+        <label for="name" class="text-sm font-medium text-slate-200"><%= t('index.nameLabel') %></label>
+        <input id="name" name="name" required placeholder="<%= t('placeholders.name') %>" class="block w-full rounded-2xl border border-slate-700/60 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/50" />
+      </div>
+      <div class="space-y-2">
+        <label for="email" class="text-sm font-medium text-slate-200"><%= t('index.emailLabel') %></label>
+        <input id="email" type="email" name="email" required placeholder="<%= t('placeholders.email') %>" class="block w-full rounded-2xl border border-slate-700/60 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/50" />
+      </div>
+      <div class="space-y-2">
+        <label for="phone" class="text-sm font-medium text-slate-200"><%= t('index.phoneLabel') %></label>
+        <input id="phone" name="phone" required placeholder="<%= t('placeholders.phone') %>" class="block w-full rounded-2xl border border-slate-700/60 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/50" />
+      </div>
+      <div class="space-y-2">
+        <label for="slot" class="text-sm font-medium text-slate-200"><%= t('index.slotLabel') %></label>
+        <select id="slot" name="slot_id" required <%= availableSlots.length === 0 ? 'disabled' : '' %> class="block w-full rounded-2xl border border-slate-700/60 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400/50 disabled:cursor-not-allowed disabled:opacity-60">
+          <% if (availableSlots.length === 0) { %>
+            <option selected disabled><%= t('index.noSlotsOption') %></option>
+          <% } else { %>
+            <% availableSlots.forEach(s => { %>
+              <option value="<%= s.id %>">
+                <%= s.start_time.replace('T',' ') %> – <%= s.end_time.slice(11) %>
+              </option>
+            <% }) %>
+          <% } %>
+        </select>
+        <p class="text-xs text-slate-500"><%= availableSlots.length === 0 ? t('index.noSlotsAlert') : t('index.disabledHint') %></p>
+      </div>
+    </div>
+    <div class="mt-8 flex justify-end">
+      <% const submitClasses = 'inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold shadow-lg transition ' + (availableSlots.length === 0 ? 'bg-slate-700 text-slate-300 shadow-slate-900/30 cursor-not-allowed opacity-70' : 'bg-sky-500 text-slate-950 shadow-sky-500/25 hover:bg-sky-400 hover:shadow-sky-400/30'); %>
+      <button type="submit" class="<%= submitClasses %>" <%= availableSlots.length === 0 ? 'disabled aria-disabled="true"' : '' %>>
+        <%= t('buttons.confirmBooking') %>
+      </button>
+    </div>
+  </form>
+
+  <section class="space-y-4">
+    <div>
+      <h2 class="text-2xl font-semibold text-white sm:text-3xl"><%= t('index.availabilityHeading') %></h2>
+      <p class="text-sm text-slate-400"><%= t('index.availabilityDescription') %></p>
+    </div>
+    <div class="overflow-hidden rounded-3xl border border-white/5 bg-slate-950/30">
+      <table class="min-w-full divide-y divide-white/5 text-left text-sm text-slate-200">
+        <thead class="bg-slate-900/60 text-xs uppercase tracking-wide text-slate-400">
+          <tr>
+            <th scope="col" class="px-5 py-4"><%= t('table.start') %></th>
+            <th scope="col" class="px-5 py-4"><%= t('table.end') %></th>
+            <th scope="col" class="px-5 py-4"><%= t('table.status') %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/5">
+          <% slots.forEach(s => { const isBooked = Boolean(s.booked_by_name); %>
+            <tr class="transition hover:bg-slate-900/50">
+              <td class="px-5 py-4 font-medium text-white"><%= s.start_time.replace('T',' ') %></td>
+              <td class="px-5 py-4 text-slate-300"><%= s.end_time.replace('T',' ') %></td>
+              <td class="px-5 py-4">
+                <% if (isBooked) { %>
+                  <span class="inline-flex items-center gap-2 rounded-full border border-rose-400/40 bg-rose-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-rose-100"><%= t('status.booked') %></span>
+                <% } else { %>
+                  <span class="inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-100"><%= t('status.free') %></span>
+                <% } %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>
